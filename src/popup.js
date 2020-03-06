@@ -15,13 +15,16 @@ document.addEventListener('DOMContentLoaded', function(){
             detailElement.innerHTML = xhr.responseText;
             
             let data = detailElement.getElementsByClassName('imso_mh__tm-scr imso_mh__mh-bd imso-hov imso_mh__nma')[0];
-            let nodesToRemove = data.getElementsByClassName("imso_mh__t-l-cont kno-fb-ctx")
+            let nodesToRemove = data?.getElementsByClassName("imso_mh__t-l-cont kno-fb-ctx") || []
 
             while(nodesToRemove.length>0){
                 nodesToRemove[0].parentNode.removeChild(nodesToRemove[0]);
             }
 
-            document.getElementById("details").innerHTML = data.outerHTML;
+            document.getElementById("details").innerHTML = data?.outerHTML;
+
+            //correcting the link for the src value
+            document.getElementsByClassName("imso_gs__icon")[0].src= "https://" + document.getElementsByClassName("imso_gs__icon")[0].src.substring(19);
             
         }
     }
