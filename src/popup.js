@@ -97,6 +97,9 @@ document.addEventListener('DOMContentLoaded', function(){
                 if(document.getElementsByClassName("ellipsisize kno-fb-ctx")[0].firstChild.innerHTML == 'Man United'){
                     stadium = 'Home';
                     document.getElementById("stadium").innerHTML = stadium;
+                    document.getElementsByTagName("body")[0].style.backgroundColor = "rgba(253,70,57,0.9)";
+                }else{
+                    document.getElementsByTagName("body")[0].style.backgroundColor = "rgba(33,150,243,1)";
                 }
             }
             
