@@ -23,8 +23,8 @@ document.addEventListener('DOMContentLoaded', function(){
             
             let fixtures;
 
-            if(detailElement.getElementsByClassName('imso_mh__tm-scr imso_mh__mh-bd imso-hov imso_mh__nma')[0]){
-                let timeOfTheMatch = detailElement.getElementsByClassName('imso_mh__lr-dt-ds')[0]?.innerHTML || "today, "+ todayDate.toLocaleString('en-US', { hour: 'numeric', hour12: true });
+            if(detailElement.getElementsByClassName('imso_mh__tm-scr imso_mh__mh-bd imso-hov imso_mh__nma')[0] && detailElement.getElementsByClassName('imso_mh__lr-dt-ds')[0]){
+                let timeOfTheMatch = detailElement.getElementsByClassName('imso_mh__lr-dt-ds')[0].innerHTML ;
                 let amOrpm = timeOfTheMatch.split(',')[1].trim().split(' ')[1];
                 let timeOfTheMatchIn24Hr;
                 if(amOrpm.toLocaleLowerCase() == 'pm'){
@@ -35,6 +35,8 @@ document.addEventListener('DOMContentLoaded', function(){
                 }
                 
                 todayDate.setHours(timeOfTheMatchIn24Hr);
+
+                console.log(todayDateInMilliseconds,todayDate.setMinutes(00),todayDateInMilliseconds - todayDate.setMinutes(00))
                 
                 //less than 5 hours
                 if(todayDateInMilliseconds - todayDate.setMinutes(00)< 10800000){
