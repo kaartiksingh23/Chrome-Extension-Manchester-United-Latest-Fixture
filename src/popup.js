@@ -1,118 +1,154 @@
-function getMatchDetails(){
-    
-}
+function getMatchDetails() {}
 
-document.addEventListener('DOMContentLoaded', function(){
-    
-    
+document.addEventListener(
+  "DOMContentLoaded",
+  function () {
     var xhr = new XMLHttpRequest();
 
-    
-    xhr.open('GET','https://www.google.com/search?q=manchester united', true);
+    xhr.open("GET", "https://www.google.com/search?q=manchester united", true);
     xhr.send();
 
-    function processRequest(e){
-    
-        var todayDate = new Date();
-        var todayDateInMilliseconds = Date.now();
+    function processRequest(e) {
+      var todayDate = new Date();
+      var todayDateInMilliseconds = Date.now();
 
-        if(xhr.readyState == 4 && xhr.status == 200){
-            
-            var detailElement = document.createElement('html');
-            detailElement.innerHTML = xhr.responseText;
-            
-            let fixtures;
+      if (xhr.readyState == 4 && xhr.status == 200) {
+        var detailElement = document.createElement("html");
+        detailElement.innerHTML = xhr.responseText;
 
-            if(detailElement.getElementsByClassName('imso_mh__tm-scr imso_mh__mh-bd imso-hov imso_mh__nma')[0] && detailElement.getElementsByClassName('imso_mh__lr-dt-ds')[0]){
-                let timeOfTheMatch = detailElement.getElementsByClassName('imso_mh__lr-dt-ds')[0].innerHTML ;
-                let amOrpm = timeOfTheMatch.split(',')[1].trim().split(' ')[1];
-                let timeOfTheMatchIn24Hr;
-                if(amOrpm.toLocaleLowerCase() == 'pm'){
-                    timeOfTheMatchIn24Hr = parseInt(timeOfTheMatch.split(',')[1].trim().split(' ')[0]) + 12 ;
-                }
-                else{
-                    timeOfTheMatchIn24Hr = parseInt(timeOfTheMatch.split(',')[1].trim().split(' ')[0])
-                }
-                
-                todayDate.setHours(timeOfTheMatchIn24Hr);
+        let fixtures;
 
-                console.log(todayDateInMilliseconds,todayDate.setMinutes(00),todayDateInMilliseconds - todayDate.setMinutes(00))
-                
-                //less than 5 hours
-                if(todayDateInMilliseconds - todayDate.setMinutes(00)< 10800000){
-                
-                    let data = detailElement.getElementsByClassName('imso_mh__tm-scr imso_mh__mh-bd imso-hov imso_mh__nma')[0];
-                    let nodesToRemove = data?.getElementsByClassName("imso_mh__t-l-cont kno-fb-ctx") || []
+        if (
+          detailElement.getElementsByClassName(
+            "imso_mh__tm-scr imso_mh__mh-bd imso-hov imso_mh__nma"
+          )[0] &&
+          detailElement.getElementsByClassName("imso_mh__lr-dt-ds")[0]
+        ) {
+          let timeOfTheMatch = detailElement.getElementsByClassName(
+            "imso_mh__lr-dt-ds"
+          )[0].innerHTML;
+          let amOrpm = timeOfTheMatch.split(",")[1].trim().split(" ")[1];
+          let timeOfTheMatchIn24Hr;
+          if (amOrpm.toLocaleLowerCase() == "pm") {
+            timeOfTheMatchIn24Hr =
+              parseInt(timeOfTheMatch.split(",")[1].trim().split(" ")[0]) + 12;
+          } else {
+            timeOfTheMatchIn24Hr = parseInt(
+              timeOfTheMatch.split(",")[1].trim().split(" ")[0]
+            );
+          }
 
-                    while(nodesToRemove.length>0){
-                        nodesToRemove[0].parentNode.removeChild(nodesToRemove[0]);
-                    }
+          todayDate.setHours(timeOfTheMatchIn24Hr);
 
-                    document.getElementById("details").innerHTML = data?.outerHTML;
-                
-                }
-                else{
-                    
-                    if(detailElement.getElementsByClassName('imso-loa imso-ani')){
-                        fixtures = detailElement.getElementsByClassName('imso-loa imso-ani');
-                    }
+          console.log(
+            todayDateInMilliseconds,
+            todayDate.setMinutes(00),
+            todayDateInMilliseconds - todayDate.setMinutes(00)
+          );
 
-                for(let fixturesIndex=0; fixturesIndex<fixtures.length; fixturesIndex++){
-                    if(todayDateInMilliseconds-(Date.parse(fixtures[fixturesIndex].getAttribute("data-start-time")))<0){
-                        document.getElementById("details").innerHTML = fixtures[fixturesIndex]?.outerHTML;
-                        break;
-                    }
-                }
-                }
+          //less than 5 hours
+          if (todayDateInMilliseconds - todayDate.setMinutes(00) < 10800000) {
+            let data = detailElement.getElementsByClassName(
+              "imso_mh__tm-scr imso_mh__mh-bd imso-hov imso_mh__nma"
+            )[0];
+            let nodesToRemove =
+              data?.getElementsByClassName("imso_mh__t-l-cont kno-fb-ctx") ||
+              [];
 
-            }
-            else{
-                
-                //code duplicated , implement a function and call it wherever necessary
-
-                if(detailElement.getElementsByClassName('imso-loa imso-ani')){
-                    fixtures = detailElement.getElementsByClassName('imso-loa imso-ani');
-                }
-
-                
-                
-                for(let fixturesIndex=0; fixturesIndex<fixtures.length; fixturesIndex++){
-                    if(todayDateInMilliseconds-(Date.parse(fixtures[fixturesIndex].getAttribute("data-start-time")))<0){
-                        document.getElementById("details").innerHTML = fixtures[fixturesIndex]?.outerHTML;
-                        break;
-                    }
-                }
+            while (nodesToRemove.length > 0) {
+              nodesToRemove[0].parentNode.removeChild(nodesToRemove[0]);
             }
 
-            
-
-            //correcting the link for the src value
-            for(let imgIndex=0; imgIndex<document.getElementsByTagName('img').length; imgIndex++){
-                document.getElementsByTagName("img")[imgIndex].src= "https://" +  document.getElementsByTagName("img")[imgIndex].src.substring(19);
+            document.getElementById("details").innerHTML = data?.outerHTML;
+          } else {
+            if (detailElement.getElementsByClassName("imso-loa imso-ani")) {
+              fixtures = detailElement.getElementsByClassName(
+                "imso-loa imso-ani"
+              );
             }
 
-            //Figuring Out if the fixture is home or away
-            var stadium = 'Away';
-            if(document.getElementsByClassName("ellipsisize kno-fb-ctx").length>0 ){
-                if(document.getElementsByClassName("ellipsisize kno-fb-ctx")[0].firstChild.innerHTML == 'Man United'){
-                    stadium = 'Home';
-                    document.getElementById("stadium").innerHTML = stadium;
-                    document.getElementsByTagName("body")[0].style.backgroundColor = "rgba(253,70,57,0.9)";
-                }else{
-                    document.getElementsByTagName("body")[0].style.backgroundColor = "rgba(33,150,243,1)";
-                }
+            for (
+              let fixturesIndex = 0;
+              fixturesIndex < fixtures.length;
+              fixturesIndex++
+            ) {
+              if (
+                todayDateInMilliseconds -
+                  Date.parse(
+                    fixtures[fixturesIndex].getAttribute("data-start-time")
+                  ) <
+                0
+              ) {
+                document.getElementById("details").innerHTML =
+                  fixtures[fixturesIndex]?.outerHTML;
+                break;
+              }
             }
-            
+          }
+        } else {
+          //code duplicated , implement a function and call it wherever necessary
+
+          if (detailElement.getElementsByClassName("imso-loa imso-ani")) {
+            fixtures = detailElement.getElementsByClassName(
+              "imso-loa imso-ani"
+            );
+          }
+
+          for (
+            let fixturesIndex = 0;
+            fixturesIndex < fixtures.length;
+            fixturesIndex++
+          ) {
+            if (
+              todayDateInMilliseconds -
+                Date.parse(
+                  fixtures[fixturesIndex].getAttribute("data-start-time")
+                ) <
+              0
+            ) {
+              document.getElementById("details").innerHTML =
+                fixtures[fixturesIndex]?.outerHTML;
+              break;
+            }
+          }
         }
+
+        //correcting the link for the src value
+        for (
+          let imgIndex = 0;
+          imgIndex < document.getElementsByTagName("img").length;
+          imgIndex++
+        ) {
+          document.getElementsByTagName("img")[imgIndex].src =
+            "https://" +
+            document.getElementsByTagName("img")[imgIndex].src.substring(19);
+        }
+
+        //Figuring Out if the fixture is home or away
+        var stadium = "Away";
+        if (
+          document.getElementsByClassName("ellipsisize kno-fb-ctx").length > 0
+        ) {
+          if (
+            document.getElementsByClassName("ellipsisize kno-fb-ctx")[0]
+              .firstChild.innerHTML == "Man United"
+          ) {
+            stadium = "Home";
+            document.getElementById("stadium").innerHTML = stadium;
+            // document.getElementsByTagName("body")[0].style.backgroundColor = "rgba(253,70,57,0.9)";
+          } else {
+            // document.getElementsByTagName("body")[0].style.backgroundColor = "rgba(33,150,243,1)";
+          }
+        }
+      }
     }
 
-    xhr.addEventListener("readystatechange",processRequest,false);
-    
-}, false);
+    xhr.addEventListener("readystatechange", processRequest, false);
+  },
+  false
+);
 
-   
-
-    /* 
+/* 
 
     Value	State	            Description
     0	    UNSENT	            The open method hasn't been called yet
@@ -122,6 +158,3 @@ document.addEventListener('DOMContentLoaded', function(){
     4	    DONE	            Everything has completed
 
     */
-
-
-    

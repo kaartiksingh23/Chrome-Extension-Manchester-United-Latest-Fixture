@@ -1,15 +1,29 @@
-html{
-    line-height: 1rem !important;
-}
-.main{
-    width:19rem;
-    text-align: center;
-    line-height: 2rem;
-    background: #94947024;
-    border: 1px solid #350202;
-    color:white;
+html {
+  line-height: 1rem !important;
 }
 
-table{
-    width:100%;
+#details {
+  box-shadow: 0px 1px #88888830;
+}
+
+h3 {
+  font-weight: normal;
+}
+
+.main {
+  font-family: "Poppins", sans-serif;
+  width: 19rem;
+  text-align: center;
+  line-height: 2rem;
+  /* background: #94947024; */
+  /* border: 1px solid #350202; */
+  color: black;
+}
+
+table {
+  width: 100%;
+}
+
+td > * {
+  vertical-align: middle;
 }
